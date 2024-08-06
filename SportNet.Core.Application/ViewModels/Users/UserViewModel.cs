@@ -1,7 +1,7 @@
 ﻿
 namespace SportNet.Core.Application.ViewModels.Users
 {
-    internal class UserViewModel
+    public class UserViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

@@ -8,5 +8,7 @@ namespace SportNet.Core.Application.Interfaces.Repositories
     public interface IUserRepository : IGenericRepository<Users>
     {
         Task<Users> LoginAsync(LoginViewModel loginVm);
+        Task UdapteAsyncWithoutPassword(Users entity, int id);
     }
 }
+
