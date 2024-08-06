@@ -9,5 +9,9 @@
         public string UserName { get; set; }
         public string Password { get; set; }
         public bool Status { get; set; }
+
+        //Navigation Properties
+        public ICollection<Events> CreatedEvents { get; set; }
+        public ICollection<EventParticipation> EventParticipations { get; set; }
     }
 }
