@@ -27,6 +27,9 @@ namespace SportNet.Core.Application.ViewModels.Users
         [Required(ErrorMessage = "El campo contraseña es requerido")]
 
         public string Password { get; set; }
+        [Required(ErrorMessage = "Las contraseñas deben de coincidir")]
+        [Compare(nameof(Password))]
+        public string ConfirmPassword { get; set; } //no
 
         public bool Status { get; set; }
     }
