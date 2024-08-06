@@ -60,5 +60,41 @@ namespace SportNet.Controllers
 
             return View();
         }
+
+        public IActionResult Register()
+        {
+            if (_validateUser.hasUser())
+            {
+                return RedirectToRoute(new { controller = "Home", action = "Index" });
+            }
+
+            return View("Register", new SaveUserViewModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(SaveUserViewModel model)
+        {
+            if (_validateUser.hasUser())
+            {
+                return RedirectToRoute(new { controller = "Home", action = "Index" });
+            }
+
+            if (!ModelState.IsValid)
+            {
+
+                return View("Register", model);
+            }
+            var ListModel = await _userServices.GetAllViewModels();
+            UserViewModel entity = ListModel.FirstOrDefault(u => u.UserName == model.UserName);
+
+            if (entity != null)
+            {
+                ModelState.AddModelError("UserValidation", "Nombre de usuario esta en uso");
+                return View();
+            }
+            await _userServices.Add(model);
+
+            return RedirectToRoute(new { controller = "User", action = "Index" });
+        }
     }
 }
