@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+
+using SportNet.Core.Application.ViewModels.Users;
+using SportNet.Core.Domain.Entities;
 
 namespace SportNet.Core.Application.Interfaces.Repositories
 {
-    internal class IUserRepository
+    public interface IUserRepository : IGenericRepository<Users>
     {
+        Task<Users> LoginAsync(LoginViewModel loginVm);
     }
 }
