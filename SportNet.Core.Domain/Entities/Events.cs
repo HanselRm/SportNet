@@ -20,5 +20,9 @@ namespace SportNet.Core.Domain.Entities
 
         //para relacionar quienes estan dentro del evento
         public int UserId { get; set; }
+
+        //Navigation Properties
+        public Users User { get; set; }
+        public ICollection<EventParticipation> EventParticipations { get; set; }
     }
 }
