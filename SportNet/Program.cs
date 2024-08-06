@@ -1,5 +1,6 @@
 using SportNet.Infrastructure.Persistence;
 using SportNet.Core.Application;
+using SportNet.Infrastructure.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,7 @@ builder.Services.AddSession();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddPersistenceInfrastructure(builder.Configuration);
 builder.Services.AddAplicationLayer(builder.Configuration);
+builder.Services.AddSharedInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
