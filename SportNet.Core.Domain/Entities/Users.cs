@@ -1,6 +1,8 @@
-﻿namespace SportNet.Core.Domain.Entities
+﻿using SportNet.Core.Domain.Common;
+
+namespace SportNet.Core.Domain.Entities
 {
-    public class Users
+    public class Users : AuditableBaseEntity
     {
         public string Name { get; set; }
         public string LastName { get; set; }

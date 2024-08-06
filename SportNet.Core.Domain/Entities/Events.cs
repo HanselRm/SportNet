@@ -1,8 +1,10 @@
 ﻿
 
+using SportNet.Core.Domain.Common;
+
 namespace SportNet.Core.Domain.Entities
 {
-    public class Events
+    public class Events : AuditableBaseEntity
     {
         public string Name { get; set; }
         //descripción del evento

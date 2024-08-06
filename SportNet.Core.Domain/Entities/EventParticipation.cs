@@ -1,7 +1,9 @@
 ﻿
+using SportNet.Core.Domain.Common;
+
 namespace SportNet.Core.Domain.Entities
 {
-    public class EventParticipation
+    public class EventParticipation : AuditableBaseEntity
     {
         public int EventId { get; set; }
         public int UserId { get; set; }
