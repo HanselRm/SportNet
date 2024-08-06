@@ -24,4 +24,4 @@ namespace SportNet.Infrastructure.Persistence
         }
     }
 }
-}
+
