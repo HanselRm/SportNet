@@ -95,8 +95,10 @@ namespace SportNet.Infrastructure.Persistence.Context
             // Configuraciones de propiedades para Event
             modelBuilder.Entity<Events>().Property(e => e.Name).IsRequired();
             modelBuilder.Entity<Events>().Property(e => e.Caption).IsRequired(false);
-            modelBuilder.Entity<Events>().Property(e => e.Date).IsRequired();
-            modelBuilder.Entity<Events>().Property(e => e.Hour).IsRequired();
+            modelBuilder.Entity<Events>().Property(e => e.Date)
+                .HasConversion<DateOnlyConverter, DateOnlyComparer>().IsRequired();
+            modelBuilder.Entity<Events>().Property(e => e.Hour)
+                 .HasConversion<TimeOnlyConverter, TimeOnlyComparer>().IsRequired();
             modelBuilder.Entity<Events>().Property(e => e.Location).IsRequired();
             modelBuilder.Entity<Events>().Property(e => e.Sport).IsRequired();
 
