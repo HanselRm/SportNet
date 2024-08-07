@@ -19,7 +19,7 @@ namespace SportNet.Infrastructure.Persistence.Repositories
 
         public override async Task UdapteAsync(Users entity, int id)
         {
-            entity.Password = PasswordEncryption.ComputeSha256Hash(entity.Password);
+            /*entity.Password = PasswordEncryption.ComputeSha256Hash(entity.Password);*/
             await base.UdapteAsync(entity, entity.Id);
         }
 
