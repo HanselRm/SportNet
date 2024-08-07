@@ -38,12 +38,12 @@ namespace SportNet.Core.Application.Services
         {
 
             SaveUserViewModel Uservm = await base.Add(vm);
-            /*await _emailServices.sendAsync(new EmailRequest
+            await _emailServices.sendAsync(new EmailRequest
             {
                 To = vm.Email,
-                Subject = "Bienvenido a la red social",
-                Body = $"<a href=\"https://localhost:7071/User/ChangeUserStatus/{Uservm.Id}\">Activar Usuario</a>"
-            });*/
+                Subject = "Bienvenido a SportNet",
+                Body = $"<a href=\"https://localhost:7144/User/ChangeUserStatus/{Uservm.Id}\">Activar Usuario</a>"
+            });
             return Uservm;
         }
 
