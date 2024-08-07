@@ -96,5 +96,25 @@ namespace SportNet.Controllers
 
             return RedirectToRoute(new { controller = "User", action = "Index" });
         }
+
+        public IActionResult LogOut()
+        {
+            HttpContext.Session.Remove("User");
+            return RedirectToRoute(new { controller = "User", action = "Index" });
+        }
+
+        public async Task<IActionResult> ChangeUserStatus(int Id)
+        {
+            var usuario = await _userServices.GetByIdSaveViewModel(Id);
+            if (usuario != null)
+            {
+                usuario.Status = true;
+                await _userServices.Update(usuario, Id);
+
+
+                return View("ChangeUserStatus");
+            }
+            return RedirectToRoute(new { controller = "User", action = "Index" });
+        }
     }
 }
