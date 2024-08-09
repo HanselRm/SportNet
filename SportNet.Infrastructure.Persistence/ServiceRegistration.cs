@@ -22,6 +22,7 @@ namespace SportNet.Infrastructure.Persistence
             #region Repositories
             service.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             service.AddTransient<IUserRepository, UserRepository>();
+            service.AddTransient<IEventRepository, EventRepository>();
             #endregion
 
             return service;

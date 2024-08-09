@@ -15,6 +15,7 @@ namespace SportNet.Core.Application
             service.AddAutoMapper(Assembly.GetExecutingAssembly());
             #region Service Dependency
             service.AddTransient<IUserServices, UserServices>();
+            service.AddTransient<IEventServices, EventServices>();
             #endregion
         }
     }
