@@ -20,7 +20,7 @@ namespace SportNet.Core.Domain.Entities
         //hora del evento
         public TimeOnly Hour { get; set; }
 
-        //para relacionar quienes estan dentro del evento
+        //para el dueño del evento
         public int UserId { get; set; }
 
         //Navigation Properties

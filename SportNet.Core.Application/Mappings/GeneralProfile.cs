@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using SportNet.Core.Application.ViewModels.Event;
 using SportNet.Core.Application.ViewModels.Users;
 using SportNet.Core.Domain.Entities;
 
@@ -37,6 +38,17 @@ namespace SportNet.Core.Application.Mappings
                 .ForMember(dest => dest.Created, opt => opt.Ignore())
                 .ForMember(dest => dest.LastModified, opt => opt.Ignore())
                 .ForMember(dest => dest.LastModifiedBy, opt => opt.Ignore());
+
+            CreateMap<Events, EventViewModel>()
+                .ReverseMap()
+                .ForMember(dest => dest.User, opt => opt.Ignore())
+                .ForMember(dest => dest.EventParticipations, opt => opt.Ignore());
+
+            CreateMap<Events, SaveEventViewModel>()
+                .ReverseMap()
+                .ForMember(dest => dest.User, opt => opt.Ignore())
+                .ForMember(dest => dest.EventParticipations, opt => opt.Ignore());
+                
         }
     }
 }
