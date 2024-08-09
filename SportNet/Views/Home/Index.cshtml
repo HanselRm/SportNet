@@ -1,8 +1,241 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using SportNet.Core.Application.ViewModels.Event;
+@using System;
+@model SaveEventViewModel;
+@using SportNet.Core.Application.ViewModels.Users;
+@using Microsoft.AspNetCore.Http;
+@using SportNet.Core.Application.Helpers;
+@inject IHttpContextAccessor httpContext;
+
+@{
+    SaveUserViewModel user = httpContext.HttpContext.Session.Get<SaveUserViewModel>("User");
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .post {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .comment {
+            margin-left: 50px;
+            margin-top: 10px;
+        }
+
+        #newEventForm {
+            display: none;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn-toggle-form {
+            margin-bottom: 20px;
+        }
+
+        .edit-form {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Toggle Button for New Event Form -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-8">
+                <button id="toggleFormBtn" class="btn btn-primary btn-toggle-form">Create New Event</button>
+            </div>
+        </div>
+
+        <!-- New Event Form (Initially Hidden) -->
+        <div id="newEventForm" class="row justify-content-center mb-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Create New Event</h4>
+                        <form asp-controller="Home" asp-action="AddPost" method="post">
+                            <div class="row">
+                                <div class="col-md-6 form-group">
+                                    <label asp-for="Name">Event Name</label>
+                                    <input asp-for="Name" class="form-control" required>
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label asp-for="Caption">Caption</label>
+                                    <input asp-for="Caption" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 form-group">
+                                    <label asp-for="Location">Location</label>
+                                    <input asp-for="Location" class="form-control" required>
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label asp-for="Sport">Sport</label>
+                                    <input asp-for="Sport" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 form-group">
+                                    <label asp-for="stars">Stars</label>
+                                    <input asp-for="stars" type="number" class="form-control" min="1" max="5" required>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <label asp-for="Date">Date</label>
+                                    <input asp-for="Date" type="date" class="form-control" required>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <label asp-for="Hour">Time</label>
+                                    <input asp-for="Hour" type="time" class="form-control" required>
+                                </div>
+                            </div>
+                            <input type="hidden" asp-for="UserId" value="@user.Id">
+                            <button type="submit" class="btn btn-success btn-block">Create Event</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @{
+            var userPublications = ((List<EventViewModel>)ViewBag.Post)
+            .OrderByDescending(a => a.Date)
+            .ThenByDescending(b => b.Hour)
+            .ToList();
+
+            if (userPublications.Any())
+            {
+                <div class="container mt-5">
+                    <h2 class="text-center mb-4">Eventos Destacados</h2>
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                        @foreach (var evento in userPublications)
+                        {
+                            <div class="col">
+                                <div class="card h-100 shadow-sm">
+                                    <div class="card-body">
+                                        @if (evento.UserId == user.Id)
+                                        {
+                                            <div class="row mb-3">
+                                                
+                                                    <div class="col-6">
+                                                        <a asp-controller="Home" asp-action="DeletePost" asp-route-Id="@evento.Id" class="btn btn-danger btn-sm">Eliminar</a>
+                                                    </div>
+                                                <div class="col-6">
+                                                    <button type="button" class="btn btn-primary btn-sm edit-btn" data-event-id="@evento.Id">Editar</button>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        <div class="event-details" id="event-details-@evento.Id">
+                                            <h5 class="card-title">@evento.Name</h5>
+                                            <h6 class="card-subtitle mb-2 text-muted">@evento.Sport</h6>
+                                            <p class="card-text">@evento.Caption</p>
+                                            <ul class="list-unstyled">
+                                                <li><i class="fas fa-map-marker-alt text-primary me-2"></i> @evento.Location</li>
+                                                <li><i class="far fa-calendar-alt text-primary me-2"></i> @evento.Date</li>
+                                                <li><i class="far fa-clock text-primary me-2"></i> @evento.Hour</li>
+                                            </ul>
+                                            <div class="stars">
+                                                @for (int i = 0; i < evento.stars; i++)
+                                                {
+                                                    <i class="fas fa-star text-warning"></i>
+                                                }
+                                                @for (int i = evento.stars; i < 5; i++)
+                                                {
+                                                    <i class="far fa-star text-warning"></i>
+                                                }
+                                            </div>
+                                        </div>
+
+                                        <div class="edit-form" id="edit-form-@evento.Id">
+                                            <form asp-controller="Home" asp-action="EditPost" method="post">
+                                                <input type="hidden" name="Id" value="@evento.Id" />
+                                                <input type="hidden" name="UserId" value="@evento.UserId" />
+                                                <div class="form-group">
+                                                    <label for="Name-@evento.Id">Nombre del Evento</label>
+                                                    <input type="text" class="form-control" id="Name-@evento.Id" name="Name" value="@evento.Name" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Sport-@evento.Id">Deporte</label>
+                                                    <input type="text" class="form-control" id="Sport-@evento.Id" name="Sport" value="@evento.Sport" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Caption-@evento.Id">Descripción</label>
+                                                    <textarea class="form-control" id="Caption-@evento.Id" name="Caption" required>@evento.Caption</textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Location-@evento.Id">Ubicación</label>
+                                                    <input type="text" class="form-control" id="Location-@evento.Id" name="Location" value="@evento.Location" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Date-@evento.Id">Fecha</label>
+                                                    <input type="date" class="form-control" id="Date-@evento.Id" name="Date" value="@evento.Date" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Hour-@evento.Id">Hora</label>
+                                                    <input type="time" class="form-control" id="Hour-@evento.Id" name="Hour" value="@evento.Hour" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="stars-@evento.Id">Estrellas</label>
+                                                    <input type="number" class="form-control" id="stars-@evento.Id" name="stars" value="@evento.stars" min="1" max="5" required>
+                                                </div>
+                                                <button type="submit" class="btn btn-success btn-sm">Guardar Cambios</button>
+                                                <button type="button" class="btn btn-secondary btn-sm cancel-edit" data-event-id="@evento.Id">Cancelar</button>
+                                            </form>
+                                        </div>
+
+                                        @if (evento.UserId != user.Id)
+                                        {
+                                            <a href="#" class="btn btn-outline-primary btn-sm">Unirse</a>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleFormBtn = document.getElementById('toggleFormBtn');
+            const newEventForm = document.getElementById('newEventForm');
+
+            toggleFormBtn.addEventListener('click', function () {
+                if (newEventForm.style.display === 'none' || newEventForm.style.display === '') {
+                    newEventForm.style.display = 'block';
+                    toggleFormBtn.textContent = 'Hide Form';
+                } else {
+                    newEventForm.style.display = 'none';
+                    toggleFormBtn.textContent = 'Create New Event';
+                }
+            });
+
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const eventId = this.getAttribute('data-event-id');
+                    document.getElementById(`event-details-${eventId}`).style.display = 'none';
+                    document.getElementById(`edit-form-${eventId}`).style.display = 'block';
+                });
+            });
+
+            document.querySelectorAll('.cancel-edit').forEach(button => {
+                button.addEventListener('click', function () {
+                    const eventId = this.getAttribute('data-event-id');
+                    document.getElementById(`event-details-${eventId}`).style.display = 'block';
+                    document.getElementById(`edit-form-${eventId}`).style.display = 'none';
+                });
+            });
+        });
+    </script>
+</body>
